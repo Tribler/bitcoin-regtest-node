@@ -9,7 +9,7 @@ The server uses Letsencrypt to retrieve a certificate for HTTPS. This certificat
 
 ## Bitcoin commands
 - Start: ./home/bitcoin/bitcoin-0.21.0/bin/bitcoind -conf=/home/bitcoin/bitcoin-node/bitcoin.conf
-- Stop./home/bitcoin/bitcoin-0.21.0/bin/bitcoin-cli -conf=/home/bitcoin/bitcoin-node/bitcoin.conf stop
+- Stop: ./home/bitcoin/bitcoin-0.21.0/bin/bitcoin-cli -conf=/home/bitcoin/bitcoin-node/bitcoin.conf stop
 - For more commands see: https://chainquery.com/bitcoin-cli
 
 ## Reset bitcoin server
