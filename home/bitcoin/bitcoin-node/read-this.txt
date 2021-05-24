@@ -1,0 +1,8 @@
+To reset the network:
+- delete everything in the .bitcoin folder
+- restart bitcoind
+- create a new wallet
+- load the new wallet
+- generate a new address for the wallet
+- copy this address to the python server and the crontab job
+- make sure all devices connected to the network are reset as well (otherwise they do not have matching blockchains)
