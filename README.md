@@ -14,11 +14,12 @@ The server uses Letsencrypt to retrieve a certificate for HTTPS. This certificat
 
 ## Reset bitcoin server
 - delete everything in the .bitcoin folder
-- restart bitcoind
-- create a new wallet
-- load the new wallet
-- generate a new address for the wallet
+- restart bitcoind (bitcoind -conf='CONF FILE PATH')
+- create a new wallet (bitcoin-cli createwallet "NAME_OF_WALLET")
+- load the new wallet (done by default if the wallet is newly created, you can skip this step. Otherwise you can use: bitcoin-cli loadwallet "filename_of_wallet.dat")
+- generate a new address for the wallet (bitcoin-cli getnewaddress "label")
 - copy this address to the python server and the crontab job
+- mine some btc to newly created address (bitcoin-cli generatetoaddress nblocks "address") NOTE: this cannot be done on the testnet
 - make sure all devices connected to the network are reset as well (otherwise they do not have matching blockchains)
 
 ## Reset python server
