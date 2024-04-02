@@ -7,14 +7,19 @@ import subprocess
 import ssl
 import re
 import copy
+import os
 
-amount = 10
+# set the amount as you please (for testnest it is recommended to use a small amount)
+amount = 0.00001
 address_regex = r"[a-km-zA-HJ-NP-Z1-9]{25,50}$"
 transaction_regex = r"[0-1]{5,11}[a-fA-F0-9]{100,800}"
 
-command_start = ['/home/bitcoin/bitcoin-0.21.0/bin/bitcoin-cli', '-conf=/home/bitcoin/bitcoin-node/bitcoin.conf']
+# change the value of -conf to the path of your bitcoin.conf file
+command_start = ['bitcoin-cli', '-conf=/home/bitcoin/bitcoin-node/bitcoin.conf']
 challenge_response = "Aegfote4P6GXJZrEtpl4LrV2bhCPYskHWmtNghJ7mrc"
-address_stored_btc = 'bcrt1qz7n0np33ukt05q3f7h59pg9kch7gaqhfkg54vl'
+
+# change the address to the address of the wallet you created (see readme for instructions)
+address_stored_btc = 'tb1qfpd4u746w6m8305mzuwfy6494m402cjurkeprr'
 
 
 def valid_hex(result):
@@ -68,6 +73,7 @@ class S(BaseHTTPRequestHandler):
 
             command = copy.deepcopy(command_start)
             command.extend(['sendtoaddress', address, f'{amount}'])
+            logging.info(f'COMMAND IS: {command}')
 
             result = subprocess.run(command, stdout=subprocess.PIPE)
             logging.info(f'Result is: {result}')
@@ -150,8 +156,8 @@ def run(server_class=HTTPServer, handler_class=S, port=443):
     logging.basicConfig(level=logging.INFO)
     server_address = ('', port)
     httpd = server_class(server_address, handler_class)
-    httpd.socket = ssl.wrap_socket(httpd.socket, keyfile="/etc/letsencrypt/live/taproot.tribler.org/privkey.pem",
-                                   certfile='/etc/letsencrypt/live/taproot.tribler.org/fullchain.pem', server_side=True)
+    httpd.socket = ssl.wrap_socket(httpd.socket, keyfile="/PATH_TO_YOUR/privkey.pem",
+                                   certfile='/PATH_TO_YOUR/fullchain1.pem', server_side=True)
     logging.info('Starting server...\n')
     try:
         httpd.serve_forever()
