@@ -12,7 +12,7 @@ amount = 10
 address_regex = r"[a-km-zA-HJ-NP-Z1-9]{25,50}$"
 transaction_regex = r"[0-1]{5,11}[a-fA-F0-9]{100,800}"
 
-command_start = ['/home/bitcoin/bitcoin-0.21.0/bin/bitcoin-cli', '-conf=/home/bitcoin/bitcoin-node/bitcoin.conf']
+command_start = ['/home/bitcoin/bitcoin-0.26.1/bin/bitcoin-cli', '-conf=/home/bitcoin/bitcoin-node/bitcoin.conf']
 challenge_response = "Aegfote4P6GXJZrEtpl4LrV2bhCPYskHWmtNghJ7mrc"
 address_stored_btc = 'bcrt1qz7n0np33ukt05q3f7h59pg9kch7gaqhfkg54vl'
 
