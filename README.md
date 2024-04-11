@@ -8,17 +8,38 @@ At the ending of [documentation](https://github.com/Tribler/trustchain-superapp/
 The server uses Letsencrypt to retrieve a certificate for HTTPS. This certificate is automatically renewed via cronjob (crontab of root user) which runs on the first day of the month. To receive the signature ACME identification is needed, while this could be done via DNS, HTTP was easier for us. So also you will find code in the python server that performs the response to an ACME challenge. The code for server (and bash history for help) is all on this github. This github contains all of our scripts, which are fully documented. In addition, our own library, as well as all other code, is fully documented. Please check out the code with the documentation to understand the flow in the app and how everything works together.
 
 ## Bitcoin commands
-- Start: ./home/bitcoin/bitcoin-0.21.0/bin/bitcoind -conf=/home/bitcoin/bitcoin-node/bitcoin.conf
-- Stop: ./home/bitcoin/bitcoin-0.21.0/bin/bitcoin-cli -conf=/home/bitcoin/bitcoin-node/bitcoin.conf stop
+- Start: ./home/bitcoin/bitcoin-0.26.1/bin/bitcoind -conf=[Absolute path to the config, it is located in home/bitcoin/bitcoin-node/bitcoin.conf]
+- Stop: ./home/bitcoin/bitcoin-0.26.1/bin/bitcoin-cli -conf=[Absolute path to the config, it is located in home/bitcoin/bitcoin-node/bitcoin.conf] stop
 - For more commands see: https://chainquery.com/bitcoin-cli
+
+## Creating a key and cert file
+This approach uses OpenSSL. The following commands were used to create a private key and a self signed certificate.
+- 'openssl genrsa -out key.pem 2048' generates a 2048 bit RSA private key
+- 'openssl req -new -sha256 -key privkey.pem -out csr.csr' creates a Certificate Signing Request (CSR)
+- 'openssl req -x509 -sha256 -days 365 -key privkey.pem -in csr.csr -out fullchain.pem' generates a self-signed x509 certificate
+
+In order for this server to work locally with the android application we need to create custom config file for SAN. This file looks as follows
+subjectKeyIdentifier   = hash
+authorityKeyIdentifier = keyid:always,issuer:always
+basicConstraints       = CA:TRUE
+keyUsage               = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment, keyAgreement, keyCertSign
+subjectAltName         = DNS:example.com, DNS:*.example.com
+issuerAltName          = issuer:copy
+
+In our case we need to include an IP subjectAltName for the IP '10.0.2.2'. We do this by assigning the value IP:10.0.2.2 to subjectAltName in the SAN config file.
+- touch san_config.ext (to create the SAN config file)
+
+In order to include this config in the cert file, the third command mentioned before needs to be changed slightly to:
+- 'openssl x509 -req -in csr.csr -signkey privkey.pem -out fullchain.pem -days 365 -sha256 -extfile san_config.ext' generates a self-signed x509 certificate
 
 ## Reset bitcoin server
 - delete everything in the .bitcoin folder
-- restart bitcoind
-- create a new wallet
-- load the new wallet
-- generate a new address for the wallet
+- restart bitcoind (bitcoind -conf='CONF FILE PATH')
+- create a new wallet (bitcoin-cli createwallet "NAME_OF_WALLET")
+- load the new wallet (done by default if the wallet is newly created, you can skip this step. Otherwise you can use: bitcoin-cli loadwallet "filename_of_wallet.dat")
+- generate a new address for the wallet (bitcoin-cli getnewaddress "label")
 - copy this address to the python server and the crontab job
+- mine some btc to newly created address (bitcoin-cli generatetoaddress nblocks "address") NOTE: this cannot be done on the testnet
 - make sure all devices connected to the network are reset as well (otherwise they do not have matching blockchains)
 
 ## Reset python server
