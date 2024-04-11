@@ -12,6 +12,26 @@ The server uses Letsencrypt to retrieve a certificate for HTTPS. This certificat
 - Stop: ./home/bitcoin/bitcoin-0.26.1/bin/bitcoin-cli -conf=[Absolute path to the config, it is located in home/bitcoin/bitcoin-node/bitcoin.conf] stop
 - For more commands see: https://chainquery.com/bitcoin-cli
 
+## Creating a key and cert file
+This approach uses OpenSSL. The following commands were used to create a private key and a self signed certificate.
+- 'openssl genrsa -out key.pem 2048' generates a 2048 bit RSA private key
+- 'openssl req -new -sha256 -key privkey.pem -out csr.csr' creates a Certificate Signing Request (CSR)
+- 'openssl req -x509 -sha256 -days 365 -key privkey.pem -in csr.csr -out fullchain.pem' generates a self-signed x509 certificate
+
+In order for this server to work locally with the android application we need to create custom config file for SAN. This file looks as follows
+subjectKeyIdentifier   = hash
+authorityKeyIdentifier = keyid:always,issuer:always
+basicConstraints       = CA:TRUE
+keyUsage               = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment, keyAgreement, keyCertSign
+subjectAltName         = DNS:example.com, DNS:*.example.com
+issuerAltName          = issuer:copy
+
+In our case we need to include an IP subjectAltName for the IP '10.0.2.2'. We do this by assigning the value IP:10.0.2.2 to subjectAltName in the SAN config file.
+- touch san_config.ext (to create the SAN config file)
+
+In order to include this config in the cert file, the third command mentioned before needs to be changed slightly to:
+- 'openssl x509 -req -in csr.csr -signkey privkey.pem -out fullchain.pem -days 365 -sha256 -extfile san_config.ext' generates a self-signed x509 certificate
+
 ## Reset bitcoin server
 - delete everything in the .bitcoin folder
 - restart bitcoind (bitcoind -conf='CONF FILE PATH')
