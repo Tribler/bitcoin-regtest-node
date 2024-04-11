@@ -8,8 +8,8 @@ At the ending of [documentation](https://github.com/Tribler/trustchain-superapp/
 The server uses Letsencrypt to retrieve a certificate for HTTPS. This certificate is automatically renewed via cronjob (crontab of root user) which runs on the first day of the month. To receive the signature ACME identification is needed, while this could be done via DNS, HTTP was easier for us. So also you will find code in the python server that performs the response to an ACME challenge. The code for server (and bash history for help) is all on this github. This github contains all of our scripts, which are fully documented. In addition, our own library, as well as all other code, is fully documented. Please check out the code with the documentation to understand the flow in the app and how everything works together.
 
 ## Bitcoin commands
-- Start: ./home/bitcoin/bitcoin-0.21.0/bin/bitcoind -conf=/home/bitcoin/bitcoin-node/bitcoin.conf
-- Stop: ./home/bitcoin/bitcoin-0.21.0/bin/bitcoin-cli -conf=/home/bitcoin/bitcoin-node/bitcoin.conf stop
+- Start: ./home/bitcoin/bitcoin-0.26.1/bin/bitcoind -conf=[Absolute path to the config, it is located in home/bitcoin/bitcoin-node/bitcoin.conf]
+- Stop: ./home/bitcoin/bitcoin-0.26.1/bin/bitcoin-cli -conf=[Absolute path to the config, it is located in home/bitcoin/bitcoin-node/bitcoin.conf] stop
 - For more commands see: https://chainquery.com/bitcoin-cli
 
 ## Reset bitcoin server

@@ -14,8 +14,7 @@ amount = 0.00001
 address_regex = r"[a-km-zA-HJ-NP-Z1-9]{25,50}$"
 transaction_regex = r"[0-1]{5,11}[a-fA-F0-9]{100,800}"
 
-# change the value of -conf to the path of your bitcoin.conf file
-command_start = ['bitcoin-cli', '-conf=/home/bitcoin/bitcoin-node/bitcoin.conf']
+command_start = ['/home/bitcoin/bitcoin-0.26.1/bin/bitcoin-cli', '-conf=/home/bitcoin/bitcoin-node/bitcoin.conf']
 challenge_response = "Aegfote4P6GXJZrEtpl4LrV2bhCPYskHWmtNghJ7mrc"
 
 # change the address to the address of the wallet you created (see readme for instructions)
